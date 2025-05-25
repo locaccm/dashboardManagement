@@ -20,5 +20,6 @@ module "cloud_run_dashboardManagement_invokers" {
   service_name  = "dashboardmanagement-service"
   invokers = {
     frontend            = "frontend-service@intricate-pad-455413-f7.iam.gserviceaccount.com"
+    authentification    = "auth-service@intricate-pad-455413-f7.iam.gserviceaccount.com"
   }
 }
