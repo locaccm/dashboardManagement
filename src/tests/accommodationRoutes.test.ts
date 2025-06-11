@@ -58,7 +58,7 @@ describe("Accommodation Routes", () => {
   it("should return 403 if access denied (GET)", async () => {
     // Deny access for the required permission
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 403 })
+      Promise.resolve({ status: 403 }),
     );
     const res = await request(app)
       .get("/accommodations")
@@ -69,9 +69,11 @@ describe("Accommodation Routes", () => {
 
   it("should return 500 if axios throws on get (GET)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 200 })
+      Promise.resolve({ status: 200 }),
     );
-    mockAxios.get.mockImplementationOnce(() => Promise.reject(new Error("fail")));
+    mockAxios.get.mockImplementationOnce(() =>
+      Promise.reject(new Error("fail")),
+    );
 
     const res = await request(app)
       .get("/accommodations")
@@ -96,7 +98,7 @@ describe("Accommodation Routes", () => {
     });
     // Mock creation API response
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ data: { ACCN_ID: 2, ACCC_NAME: "Test Flat" } })
+      Promise.resolve({ data: { ACCN_ID: 2, ACCC_NAME: "Test Flat" } }),
     );
 
     const res = await request(app)
@@ -122,7 +124,7 @@ describe("Accommodation Routes", () => {
 
   it("should return 403 if not authorized (POST)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 403 })
+      Promise.resolve({ status: 403 }),
     );
     const res = await request(app)
       .post("/accommodations")
@@ -133,10 +135,10 @@ describe("Accommodation Routes", () => {
 
   it("should return 500 if axios throws (POST)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 200 })
+      Promise.resolve({ status: 200 }),
     );
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.reject(new Error("fail"))
+      Promise.reject(new Error("fail")),
     );
 
     const res = await request(app)
@@ -166,7 +168,7 @@ describe("Accommodation Routes", () => {
       return Promise.resolve({ status: 403 });
     });
     mockAxios.put.mockImplementationOnce(() =>
-      Promise.resolve({ data: { ACCN_ID: 1, ACCC_NAME: "Updated" } })
+      Promise.resolve({ data: { ACCN_ID: 1, ACCC_NAME: "Updated" } }),
     );
 
     const res = await request(app)
@@ -189,7 +191,7 @@ describe("Accommodation Routes", () => {
 
   it("should return 403 if not authorized (PUT)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 403 })
+      Promise.resolve({ status: 403 }),
     );
     const res = await request(app)
       .put("/accommodations/1")
@@ -200,10 +202,10 @@ describe("Accommodation Routes", () => {
 
   it("should return 500 if axios throws (PUT)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 200 })
+      Promise.resolve({ status: 200 }),
     );
     mockAxios.put.mockImplementationOnce(() =>
-      Promise.reject(new Error("fail"))
+      Promise.reject(new Error("fail")),
     );
 
     const res = await request(app)
@@ -228,7 +230,7 @@ describe("Accommodation Routes", () => {
       return Promise.resolve({ status: 403 });
     });
     mockAxios.delete.mockImplementationOnce(() =>
-      Promise.resolve({ data: { message: "Deleted" } })
+      Promise.resolve({ data: { message: "Deleted" } }),
     );
 
     const res = await request(app)
@@ -248,7 +250,7 @@ describe("Accommodation Routes", () => {
 
   it("should return 403 if not authorized (DELETE)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 403 })
+      Promise.resolve({ status: 403 }),
     );
     const res = await request(app)
       .delete("/accommodations/1")
@@ -259,10 +261,10 @@ describe("Accommodation Routes", () => {
 
   it("should return 500 if axios throws (DELETE)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 200 })
+      Promise.resolve({ status: 200 }),
     );
     mockAxios.delete.mockImplementationOnce(() =>
-      Promise.reject(new Error("fail"))
+      Promise.reject(new Error("fail")),
     );
     const res = await request(app)
       .delete("/accommodations/1")

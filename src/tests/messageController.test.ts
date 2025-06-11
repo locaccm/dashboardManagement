@@ -41,13 +41,15 @@ describe("Message Controller with access control", () => {
 
     expect(mockAxios.post).toHaveBeenCalledWith(
       "http://fake-auth/access/check",
-      { token: "valid_token", rightName: "VIEW_MESSAGES" }
+      { token: "valid_token", rightName: "VIEW_MESSAGES" },
     );
     expect(mockAxios.get).toHaveBeenCalledWith("http://fake/messages", {
       params: { from: "1", to: "2" },
     });
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith([{ MESN_ID: 1, MESC_CONTENT: "Hello" }]);
+    expect(res.json).toHaveBeenCalledWith([
+      { MESN_ID: 1, MESC_CONTENT: "Hello" },
+    ]);
   });
 
   it("should send message with valid token and access", async () => {
@@ -61,22 +63,24 @@ describe("Message Controller with access control", () => {
       json: jest.fn(),
     } as unknown as Response;
 
-    (mockAxios.post as jest.Mock).mockImplementation((url: string, data: any) => {
-      if (url.includes("/access/check")) {
-        return Promise.resolve({ status: 200 });
-      }
-      if (url === "http://fake/messages") {
-        return Promise.resolve({
-          data: { MESN_ID: 2, MESC_CONTENT: data.content },
-        });
-      }
-    });
+    (mockAxios.post as jest.Mock).mockImplementation(
+      (url: string, data: any) => {
+        if (url.includes("/access/check")) {
+          return Promise.resolve({ status: 200 });
+        }
+        if (url === "http://fake/messages") {
+          return Promise.resolve({
+            data: { MESN_ID: 2, MESC_CONTENT: data.content },
+          });
+        }
+      },
+    );
 
     await sendMessage(req, res);
 
     expect(mockAxios.post).toHaveBeenCalledWith(
       "http://fake-auth/access/check",
-      { token: "valid_token", rightName: "SEND_MESSAGE" }
+      { token: "valid_token", rightName: "SEND_MESSAGE" },
     );
     expect(mockAxios.post).toHaveBeenCalledWith("http://fake/messages", {
       sender: 1,

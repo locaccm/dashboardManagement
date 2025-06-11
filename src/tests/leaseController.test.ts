@@ -3,7 +3,11 @@
 process.env.LEASE_API = "http://fake";
 process.env.AUTH_SERVICE_URL = "http://fake-auth";
 
-import { createLease, updateLease, deleteLease } from "../controllers/leaseController";
+import {
+  createLease,
+  updateLease,
+  deleteLease,
+} from "../controllers/leaseController";
 import mockAxios from "axios";
 import { Request, Response } from "express";
 
@@ -27,16 +31,20 @@ describe("Lease Controller with access control", () => {
       sendStatus: jest.fn(),
     } as unknown as Response;
 
-    (mockAxios.post as jest.Mock).mockImplementation((url: string, data: any) => {
-      if (url.includes("/access/check")) return Promise.resolve({ status: 200 });
-      if (url.includes("/lease")) return Promise.resolve({ data: { id: 1, ...data } });
-    });
+    (mockAxios.post as jest.Mock).mockImplementation(
+      (url: string, data: any) => {
+        if (url.includes("/access/check"))
+          return Promise.resolve({ status: 200 });
+        if (url.includes("/lease"))
+          return Promise.resolve({ data: { id: 1, ...data } });
+      },
+    );
 
     await createLease(req, res);
 
     expect(mockAxios.post).toHaveBeenCalledWith(
       "http://fake-auth/access/check",
-      { token: "valid_token", rightName: "CREATE_LEASE" }
+      { token: "valid_token", rightName: "CREATE_LEASE" },
     );
     expect(mockAxios.post).toHaveBeenCalledWith("http://fake/lease", req.body);
     expect(res.status).toHaveBeenCalledWith(201);
@@ -56,22 +64,25 @@ describe("Lease Controller with access control", () => {
       sendStatus: jest.fn(),
     } as unknown as Response;
 
-    (mockAxios.post as jest.Mock).mockImplementation((url: string, data: any) => {
-      if (url.includes("/access/check")) return Promise.resolve({ status: 200 });
-    });
+    (mockAxios.post as jest.Mock).mockImplementation(
+      (url: string, data: any) => {
+        if (url.includes("/access/check"))
+          return Promise.resolve({ status: 200 });
+      },
+    );
     (mockAxios.put as jest.Mock).mockResolvedValue({
-      data: { id: 42, ...req.body }
+      data: { id: 42, ...req.body },
     });
 
     await updateLease(req, res);
 
     expect(mockAxios.post).toHaveBeenCalledWith(
       "http://fake-auth/access/check",
-      { token: "valid_token", rightName: "UPDATE_LEASE" }
+      { token: "valid_token", rightName: "UPDATE_LEASE" },
     );
     expect(mockAxios.put).toHaveBeenCalledWith(
       "http://fake/lease/42",
-      req.body
+      req.body,
     );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ id: 42, LEAD_START: "2024-02-01" });
@@ -89,16 +100,19 @@ describe("Lease Controller with access control", () => {
       sendStatus: jest.fn(),
     } as unknown as Response;
 
-    (mockAxios.post as jest.Mock).mockImplementation((url: string, data: any) => {
-      if (url.includes("/access/check")) return Promise.resolve({ status: 200 });
-    });
+    (mockAxios.post as jest.Mock).mockImplementation(
+      (url: string, data: any) => {
+        if (url.includes("/access/check"))
+          return Promise.resolve({ status: 200 });
+      },
+    );
     (mockAxios.delete as jest.Mock).mockResolvedValue({});
 
     await deleteLease(req, res);
 
     expect(mockAxios.post).toHaveBeenCalledWith(
       "http://fake-auth/access/check",
-      { token: "valid_token", rightName: "DELETE_LEASE" }
+      { token: "valid_token", rightName: "DELETE_LEASE" },
     );
     expect(mockAxios.delete).toHaveBeenCalledWith("http://fake/lease/12");
     expect(res.status).toHaveBeenCalledWith(204);
@@ -108,7 +122,7 @@ describe("Lease Controller with access control", () => {
     const req = {
       headers: {},
       body: {},
-      params: { id: "15" }
+      params: { id: "15" },
     } as unknown as Request;
 
     const res = {
@@ -131,7 +145,7 @@ describe("Lease Controller with access control", () => {
     const req = {
       headers: { authorization: "Bearer invalid_token" },
       body: {},
-      params: { id: "15" }
+      params: { id: "15" },
     } as unknown as Request;
 
     const res = {

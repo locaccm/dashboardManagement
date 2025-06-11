@@ -14,9 +14,7 @@ import {
 // Mock axios globally
 jest.mock("axios");
 
-beforeAll(() => {
-
-});
+beforeAll(() => {});
 
 describe("eventController", () => {
   let req: Partial<Request>;
@@ -43,7 +41,7 @@ describe("eventController", () => {
 
     expect(mockAxios.post).toHaveBeenCalledWith(
       "http://fake-auth/access/check",
-      { token: "valid_token", rightName: "VIEW_EVENTS" }
+      { token: "valid_token", rightName: "VIEW_EVENTS" },
     );
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith([{ id: 1, title: "Event 1" }]);
@@ -96,14 +94,20 @@ describe("eventController", () => {
   });
 
   it("should return 403 if access denied (getEventById)", async () => {
-    req = { headers: { authorization: "Bearer invalid_token" }, params: { id: "42" } };
+    req = {
+      headers: { authorization: "Bearer invalid_token" },
+      params: { id: "42" },
+    };
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 403 });
     await getEventById(req as Request, res as Response);
     expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
 
   it("should return 500 if axios fails (getEventById)", async () => {
-    req = { headers: { authorization: "Bearer valid_token" }, params: { id: "42" } };
+    req = {
+      headers: { authorization: "Bearer valid_token" },
+      params: { id: "42" },
+    };
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 200 });
     (mockAxios.get as jest.Mock).mockRejectedValue(new Error("fail"));
     await getEventById(req as Request, res as Response);
@@ -113,7 +117,10 @@ describe("eventController", () => {
 
   // ---- createEvent ----
   it("should create an event with valid token and rights", async () => {
-    req = { headers: { authorization: "Bearer valid_token" }, body: { title: "X" } };
+    req = {
+      headers: { authorization: "Bearer valid_token" },
+      body: { title: "X" },
+    };
     (mockAxios.post as jest.Mock).mockResolvedValueOnce({ status: 200 });
     (mockAxios.post as jest.Mock).mockResolvedValueOnce({
       data: { id: 99, title: "X" },
@@ -148,9 +155,15 @@ describe("eventController", () => {
 
   // ---- updateEvent ----
   it("should update an event with valid token and rights", async () => {
-    req = { headers: { authorization: "Bearer valid_token" }, params: { id: "1" }, body: { title: "X" } };
+    req = {
+      headers: { authorization: "Bearer valid_token" },
+      params: { id: "1" },
+      body: { title: "X" },
+    };
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 200 });
-    (mockAxios.put as jest.Mock).mockResolvedValue({ data: { id: 1, title: "X" } });
+    (mockAxios.put as jest.Mock).mockResolvedValue({
+      data: { id: 1, title: "X" },
+    });
     await updateEvent(req as Request, res as Response);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ id: 1, title: "X" });
@@ -164,14 +177,22 @@ describe("eventController", () => {
   });
 
   it("should return 403 if access denied (updateEvent)", async () => {
-    req = { headers: { authorization: "Bearer invalid_token" }, params: { id: "1" }, body: {} };
+    req = {
+      headers: { authorization: "Bearer invalid_token" },
+      params: { id: "1" },
+      body: {},
+    };
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 403 });
     await updateEvent(req as Request, res as Response);
     expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
 
   it("should return 500 if axios fails (updateEvent)", async () => {
-    req = { headers: { authorization: "Bearer valid_token" }, params: { id: "1" }, body: {} };
+    req = {
+      headers: { authorization: "Bearer valid_token" },
+      params: { id: "1" },
+      body: {},
+    };
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 200 });
     (mockAxios.put as jest.Mock).mockRejectedValue(new Error("fail"));
     await updateEvent(req as Request, res as Response);
@@ -181,9 +202,14 @@ describe("eventController", () => {
 
   // ---- deleteEvent ----
   it("should delete an event with valid token and rights", async () => {
-    req = { headers: { authorization: "Bearer valid_token" }, params: { id: "3" } };
+    req = {
+      headers: { authorization: "Bearer valid_token" },
+      params: { id: "3" },
+    };
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 200 });
-    (mockAxios.delete as jest.Mock).mockResolvedValue({ data: { message: "Deleted" } });
+    (mockAxios.delete as jest.Mock).mockResolvedValue({
+      data: { message: "Deleted" },
+    });
     await deleteEvent(req as Request, res as Response);
     expect(res.status).toHaveBeenCalledWith(200);
     expect(res.json).toHaveBeenCalledWith({ message: "Deleted" });
@@ -197,14 +223,20 @@ describe("eventController", () => {
   });
 
   it("should return 403 if access denied (deleteEvent)", async () => {
-    req = { headers: { authorization: "Bearer invalid_token" }, params: { id: "3" } };
+    req = {
+      headers: { authorization: "Bearer invalid_token" },
+      params: { id: "3" },
+    };
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 403 });
     await deleteEvent(req as Request, res as Response);
     expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
 
   it("should return 500 if axios fails (deleteEvent)", async () => {
-    req = { headers: { authorization: "Bearer valid_token" }, params: { id: "3" } };
+    req = {
+      headers: { authorization: "Bearer valid_token" },
+      params: { id: "3" },
+    };
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 200 });
     (mockAxios.delete as jest.Mock).mockRejectedValue(new Error("fail"));
     await deleteEvent(req as Request, res as Response);

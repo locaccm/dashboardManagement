@@ -27,7 +27,7 @@ describe("Event Routes with Access Control", () => {
     });
     // Mock events fetch
     mockAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({ data: [{ id: 1, title: "Event 1" }] })
+      Promise.resolve({ data: [{ id: 1, title: "Event 1" }] }),
     );
 
     const res = await request(app)
@@ -46,7 +46,7 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 403 if access denied (GET ALL)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 403 })
+      Promise.resolve({ status: 403 }),
     );
     const res = await request(app)
       .get("/events")
@@ -56,10 +56,10 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 500 if axios throws (GET ALL)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 200 })
+      Promise.resolve({ status: 200 }),
     );
     mockAxios.get.mockImplementationOnce(() =>
-      Promise.reject(new Error("fail"))
+      Promise.reject(new Error("fail")),
     );
     const res = await request(app)
       .get("/events")
@@ -77,7 +77,7 @@ describe("Event Routes with Access Control", () => {
       return Promise.resolve({ status: 403 });
     });
     mockAxios.get.mockImplementationOnce(() =>
-      Promise.resolve({ data: { id: 42, title: "Event Test" } })
+      Promise.resolve({ data: { id: 42, title: "Event Test" } }),
     );
     const res = await request(app)
       .get("/events/42")
@@ -94,7 +94,7 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 403 if access denied (GET BY ID)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 403 })
+      Promise.resolve({ status: 403 }),
     );
     const res = await request(app)
       .get("/events/42")
@@ -104,10 +104,10 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 500 if axios throws (GET BY ID)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 200 })
+      Promise.resolve({ status: 200 }),
     );
     mockAxios.get.mockImplementationOnce(() =>
-      Promise.reject(new Error("fail"))
+      Promise.reject(new Error("fail")),
     );
     const res = await request(app)
       .get("/events/42")
@@ -125,7 +125,7 @@ describe("Event Routes with Access Control", () => {
       return Promise.resolve({ status: 403 });
     });
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ data: { id: 100, title: "New Event" } })
+      Promise.resolve({ data: { id: 100, title: "New Event" } }),
     );
 
     const res = await request(app)
@@ -145,7 +145,7 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 403 if access denied (POST)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 403 })
+      Promise.resolve({ status: 403 }),
     );
     const res = await request(app)
       .post("/events")
@@ -156,10 +156,10 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 500 if axios throws (POST)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 200 })
+      Promise.resolve({ status: 200 }),
     );
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.reject(new Error("fail"))
+      Promise.reject(new Error("fail")),
     );
     const res = await request(app)
       .post("/events")
@@ -178,7 +178,7 @@ describe("Event Routes with Access Control", () => {
       return Promise.resolve({ status: 403 });
     });
     mockAxios.put.mockImplementationOnce(() =>
-      Promise.resolve({ data: { id: 42, title: "Updated Event" } })
+      Promise.resolve({ data: { id: 42, title: "Updated Event" } }),
     );
     const res = await request(app)
       .put("/events/42")
@@ -197,7 +197,7 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 403 if access denied (PUT)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 403 })
+      Promise.resolve({ status: 403 }),
     );
     const res = await request(app)
       .put("/events/42")
@@ -208,10 +208,10 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 500 if axios throws (PUT)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 200 })
+      Promise.resolve({ status: 200 }),
     );
     mockAxios.put.mockImplementationOnce(() =>
-      Promise.reject(new Error("fail"))
+      Promise.reject(new Error("fail")),
     );
     const res = await request(app)
       .put("/events/42")
@@ -230,7 +230,7 @@ describe("Event Routes with Access Control", () => {
       return Promise.resolve({ status: 403 });
     });
     mockAxios.delete.mockImplementationOnce(() =>
-      Promise.resolve({ data: { message: "Deleted" } })
+      Promise.resolve({ data: { message: "Deleted" } }),
     );
     const res = await request(app)
       .delete("/events/42")
@@ -247,7 +247,7 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 403 if access denied (DELETE)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 403 })
+      Promise.resolve({ status: 403 }),
     );
     const res = await request(app)
       .delete("/events/42")
@@ -257,10 +257,10 @@ describe("Event Routes with Access Control", () => {
 
   it("should return 500 if axios throws (DELETE)", async () => {
     mockAxios.post.mockImplementationOnce(() =>
-      Promise.resolve({ status: 200 })
+      Promise.resolve({ status: 200 }),
     );
     mockAxios.delete.mockImplementationOnce(() =>
-      Promise.reject(new Error("fail"))
+      Promise.reject(new Error("fail")),
     );
     const res = await request(app)
       .delete("/events/42")

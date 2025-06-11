@@ -10,44 +10,49 @@ import mockAxios from "axios";
 jest.mock("axios");
 
 describe("Lease Routes with access control", () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-      
-        (mockAxios.post as jest.Mock).mockImplementation((url: string, data: any) => {
-          // Access control
-          if (url.includes("/access/check")) {
-            // Check permission in data
-            if (
-              data.rightName === "CREATE_LEASE" ||
-              data.rightName === "UPDATE_LEASE" ||
-              data.rightName === "DELETE_LEASE"
-            ) {
-              return Promise.resolve({ status: 200 });
-            }
-            return Promise.resolve({ status: 403 });
-          }
-          // Create lease
-          if (url === "http://fake/lease") {
-            return Promise.resolve({ data: { id: 1, ...data } });
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    (mockAxios.post as jest.Mock).mockImplementation(
+      (url: string, data: any) => {
+        // Access control
+        if (url.includes("/access/check")) {
+          // Check permission in data
+          if (
+            data.rightName === "CREATE_LEASE" ||
+            data.rightName === "UPDATE_LEASE" ||
+            data.rightName === "DELETE_LEASE"
+          ) {
+            return Promise.resolve({ status: 200 });
           }
           return Promise.resolve({ status: 403 });
-        });
-      
-        (mockAxios.put as jest.Mock).mockImplementation((url: string, data: any) => {
-          if (url.startsWith("http://fake/lease/")) {
-            return Promise.resolve({ data: { id: Number(url.split("/").pop()), ...data } });
-          }
-          return Promise.resolve({ status: 403 });
-        });
-      
-        (mockAxios.delete as jest.Mock).mockImplementation((url: string) => {
-          if (url.startsWith("http://fake/lease/")) {
-            return Promise.resolve({});
-          }
-          return Promise.resolve({ status: 403 });
-        });
-      });
-      
+        }
+        // Create lease
+        if (url === "http://fake/lease") {
+          return Promise.resolve({ data: { id: 1, ...data } });
+        }
+        return Promise.resolve({ status: 403 });
+      },
+    );
+
+    (mockAxios.put as jest.Mock).mockImplementation(
+      (url: string, data: any) => {
+        if (url.startsWith("http://fake/lease/")) {
+          return Promise.resolve({
+            data: { id: Number(url.split("/").pop()), ...data },
+          });
+        }
+        return Promise.resolve({ status: 403 });
+      },
+    );
+
+    (mockAxios.delete as jest.Mock).mockImplementation((url: string) => {
+      if (url.startsWith("http://fake/lease/")) {
+        return Promise.resolve({});
+      }
+      return Promise.resolve({ status: 403 });
+    });
+  });
 
   it("should create a lease via POST /leases with valid token", async () => {
     const leaseData = {

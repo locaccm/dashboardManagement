@@ -13,29 +13,33 @@ describe("Message Routes with access control", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    (mockAxios.post as jest.Mock).mockImplementation((url: string, data: any) => {
-      if (url.includes("/access/check")) {
-        return Promise.resolve({ status: 200 }); // Access granted
-      }
-      if (url === "http://fake/messages") {
-        return Promise.resolve({
-          data: { MESN_ID: 2, MESC_CONTENT: data.content },
-        });
-      }
-    });
+    (mockAxios.post as jest.Mock).mockImplementation(
+      (url: string, data: any) => {
+        if (url.includes("/access/check")) {
+          return Promise.resolve({ status: 200 }); // Access granted
+        }
+        if (url === "http://fake/messages") {
+          return Promise.resolve({
+            data: { MESN_ID: 2, MESC_CONTENT: data.content },
+          });
+        }
+      },
+    );
 
-    (mockAxios.get as jest.Mock).mockImplementation((url: string, config?: any) => {
-      if (
-        url === "http://fake/messages" &&
-        config?.params?.from === "1" &&
-        config?.params?.to === "2"
-      ) {
-        return Promise.resolve({
-          data: [{ MESN_ID: 1, MESC_CONTENT: "Hello" }],
-        });
-      }
-      return Promise.resolve({ data: [] });
-    });
+    (mockAxios.get as jest.Mock).mockImplementation(
+      (url: string, config?: any) => {
+        if (
+          url === "http://fake/messages" &&
+          config?.params?.from === "1" &&
+          config?.params?.to === "2"
+        ) {
+          return Promise.resolve({
+            data: [{ MESN_ID: 1, MESC_CONTENT: "Hello" }],
+          });
+        }
+        return Promise.resolve({ data: [] });
+      },
+    );
   });
 
   it("should return messages between users with valid token", async () => {
