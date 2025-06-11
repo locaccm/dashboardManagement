@@ -1,20 +1,60 @@
+import axios from 'axios';
 import { Request, Response } from 'express';
-import prisma from '../lib/prisma';
 
-export const getUserMessages = async (req: Request, res: Response) => {
-  const messages = await prisma.message.findMany({
-    where: {
-      OR: [
-        { MESN_SENDER: parseInt(req.params.userId) },
-        { MESN_RECEIVER: parseInt(req.params.userId) }
-      ]
-    },
-    include: { sender: true, receiver: true },
-  });
-  res.json(messages);
+const MESSAGE_API = process.env.MESSAGE_API;
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
+
+const checkAccess = async (token: string, rightName: string): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${AUTH_SERVICE_URL}/access/check`, { token, rightName });
+    return response.status === 200;
+  } catch (error) {
+    return false;
+  }
 };
 
-export const sendMessage = async (req: Request, res: Response) => {
-  const message = await prisma.message.create({ data: req.body });
-  res.json(message);
+export const getMessages = async (req: Request, res: Response): Promise<void> => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    res.status(401).json({ error: 'No token provided' });
+  } else {
+    const access = await checkAccess(token, 'VIEW_MESSAGES');
+    if (!access) {
+      res.sendStatus(403);
+    } else {
+      const { from, to } = req.query;
+      try {
+        const response = await axios.get(`${MESSAGE_API}`, {
+          params: { from, to },
+        });
+        res.status(200).json(response.data);
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch messages' });
+      }
+    }
+  }
+};
+
+export const sendMessage = async (req: Request, res: Response): Promise<void> => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    res.status(401).json({ error: 'No token provided' });
+  } else {
+    const access = await checkAccess(token, 'SEND_MESSAGE');
+    if (!access) {
+      res.sendStatus(403);
+    } else {
+      const { sender, receiver, content } = req.body;
+      try {
+        const response = await axios.post(`${MESSAGE_API}`, {
+          sender,
+          receiver,
+          content,
+        });
+        res.status(200).json(response.data);
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to send message' });
+      }
+    }
+  }
 };
