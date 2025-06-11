@@ -4,6 +4,9 @@ import { Request, Response } from "express";
 const EVENT_API = process.env.EVENT_API;
 const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
 
+/**
+ * Verifies if the user has the right to perform an action.
+ */
 const checkAccess = async (token: string, rightName: string): Promise<boolean> => {
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/access/check`, { token, rightName });
@@ -13,6 +16,10 @@ const checkAccess = async (token: string, rightName: string): Promise<boolean> =
   }
 };
 
+/**
+ * Retrieves all events.
+ * Requires 'VIEW_EVENTS' permission.
+ */
 export const getEvents = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
@@ -32,6 +39,10 @@ export const getEvents = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+/**
+ * Retrieves a specific event by its ID.
+ * Requires 'VIEW_EVENTS' permission.
+ */
 export const getEventById = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   const { id } = req.params;
@@ -53,6 +64,10 @@ export const getEventById = async (req: Request, res: Response): Promise<void> =
   }
 };
 
+/**
+ * Creates a new event.
+ * Requires 'CREATE_EVENT' permission.
+ */
 export const createEvent = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
 
@@ -73,6 +88,10 @@ export const createEvent = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+/**
+ * Updates an existing event by ID.
+ * Requires 'UPDATE_EVENT' permission.
+ */
 export const updateEvent = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   const { id } = req.params;
@@ -94,6 +113,10 @@ export const updateEvent = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+/**
+ * Deletes an event by ID.
+ * Requires 'DELETE_EVENT' permission.
+ */
 export const deleteEvent = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   const { id } = req.params;

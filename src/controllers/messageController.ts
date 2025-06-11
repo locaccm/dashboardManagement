@@ -4,6 +4,9 @@ import { Request, Response } from 'express';
 const MESSAGE_API = process.env.MESSAGE_API;
 const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
 
+/**
+ * Utility function to verify if the user has the required access right.
+ */
 const checkAccess = async (token: string, rightName: string): Promise<boolean> => {
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/access/check`, { token, rightName });
@@ -13,6 +16,10 @@ const checkAccess = async (token: string, rightName: string): Promise<boolean> =
   }
 };
 
+/**
+ * Controller to get messages exchanged between two users.
+ * Requires 'VIEW_MESSAGES' permission.
+ */
 export const getMessages = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
@@ -35,6 +42,10 @@ export const getMessages = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+/**
+ * Controller to send a message from one user to another.
+ * Requires 'SEND_MESSAGE' permission.
+ */
 export const sendMessage = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {

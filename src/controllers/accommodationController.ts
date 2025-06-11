@@ -4,6 +4,9 @@ import { Request, Response } from 'express';
 const ACCOMMODATION_API = process.env.ACCOMMODATION_API;
 const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
 
+/**
+ * Checks if the user has the required permission by calling the Auth microservice.
+ */
 const checkAccess = async (token: string, rightName: string): Promise<boolean> => {
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/access/check`, { token, rightName });
@@ -13,6 +16,10 @@ const checkAccess = async (token: string, rightName: string): Promise<boolean> =
   }
 };
 
+/**
+ * Retrieves accommodations for a user based on optional query params.
+ * Requires 'VIEW_ACCOMMODATIONS' permission.
+ */
 export const getAccommodations = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
@@ -35,6 +42,10 @@ export const getAccommodations = async (req: Request, res: Response): Promise<vo
   }
 };
 
+/**
+ * Creates a new accommodation.
+ * Requires 'CREATE_ACCOMMODATION' permission.
+ */
 export const createAccommodation = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
@@ -54,6 +65,10 @@ export const createAccommodation = async (req: Request, res: Response): Promise<
   }
 };
 
+/**
+ * Updates an existing accommodation by ID.
+ * Requires 'UPDATE_ACCOMMODATION' permission.
+ */
 export const updateAccommodation = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   const { id } = req.params;
@@ -78,6 +93,10 @@ export const updateAccommodation = async (req: Request, res: Response): Promise<
   }
 };
 
+/**
+ * Deletes an accommodation by ID.
+ * Requires 'DELETE_ACCOMMODATION' permission.
+ */
 export const deleteAccommodation = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   const { id } = req.params;

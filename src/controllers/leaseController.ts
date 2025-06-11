@@ -4,6 +4,9 @@ import { Request, Response } from 'express';
 const LEASE_API = process.env.LEASE_API;
 const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
 
+/**
+ * Utility function to check if the user has access to a specific right.
+ */
 const checkAccess = async (token: string, rightName: string): Promise<boolean> => {
   try {
     const response = await axios.post(`${AUTH_SERVICE_URL}/access/check`, { token, rightName });
@@ -13,6 +16,10 @@ const checkAccess = async (token: string, rightName: string): Promise<boolean> =
   }
 };
 
+/**
+ * Controller to create a lease.
+ * Requires 'CREATE_LEASE' permission.
+ */
 export const createLease = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
@@ -32,6 +39,10 @@ export const createLease = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+/**
+ * Controller to update an existing lease.
+ * Requires 'UPDATE_LEASE' permission.
+ */
 export const updateLease = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   const { id } = req.params;
@@ -53,6 +64,10 @@ export const updateLease = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+/**
+ * Controller to delete a lease by ID.
+ * Requires 'DELETE_LEASE' permission.
+ */
 export const deleteLease = async (req: Request, res: Response): Promise<void> => {
   const token = req.headers.authorization?.split(' ')[1];
   const { id } = req.params;
