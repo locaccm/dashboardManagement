@@ -10,6 +10,7 @@ import leaseRoutes from './routes/leaseRoutes';
 import accommodationRoutes from './routes/accommodationRoutes';
 import eventRoutes from "./routes/eventRoutes";
 import messageRoutes from "./routes/messageRoutes";
+import cors from 'cors';
 
 const app = express();
 app.use(express.json()); // Parse incoming JSON requests
@@ -23,6 +24,13 @@ app.use('/accommodations', accommodationRoutes);
 
 // Initialize Swagger docs
 setupSwagger(app);
+
+
+// autorise tout en dev (pour la prod, précise les origins !)
+app.use(cors({
+  origin: 'http://localhost:5173', // autorise ton front
+  credentials: true, // autorise les cookies si tu en utilises
+}));
 
 const PORT = process.env.PORT || 4000;
 
