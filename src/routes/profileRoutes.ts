@@ -1,5 +1,8 @@
-import { Router } from 'express';
-import { getAllProfiles, getProfileById } from '../controllers/profileController';
+import { Router } from "express";
+import {
+  getAllProfiles,
+  getProfileById,
+} from "../controllers/profileController";
 
 const router = Router();
 
@@ -22,7 +25,7 @@ const router = Router();
  *       500:
  *         description: Failed to fetch profiles
  */
-router.get('/', getAllProfiles);
+router.get("/", getAllProfiles);
 
 /**
  * @swagger
@@ -42,6 +45,6 @@ router.get('/', getAllProfiles);
  *       500:
  *         description: Failed to fetch profile
  */
-router.get('/:id', getProfileById);
+router.get("/:id", getProfileById);
 
 export default router;

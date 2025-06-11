@@ -1,21 +1,24 @@
-process.env.PROFILE_API = 'http://fake';
-process.env.AUTH_SERVICE_URL = 'http://fake-auth';
+process.env.PROFILE_API = "http://fake";
+process.env.AUTH_SERVICE_URL = "http://fake-auth";
 
-import { getAllProfiles, getProfileById } from '../controllers/profileController';
-import mockAxios from 'axios';
-import { Request, Response } from 'express';
+import {
+  getAllProfiles,
+  getProfileById,
+} from "../controllers/profileController";
+import mockAxios from "axios";
+import { Request, Response } from "express";
 
-jest.mock('axios'); // Mock axios globally
+jest.mock("axios"); // Mock axios globally
 
-describe('Profile Controller with access control', () => {
+describe("Profile Controller with access control", () => {
   beforeEach(() => {
     jest.clearAllMocks(); // Clear mocks before each test
   });
 
-  it('should fetch all profiles with valid token and access', async () => {
+  it("should fetch all profiles with valid token and access", async () => {
     // Mock Express req/res
     const req = {
-      headers: { authorization: 'Bearer valid_token' },
+      headers: { authorization: "Bearer valid_token" },
     } as unknown as Request;
 
     const res = {
@@ -26,29 +29,32 @@ describe('Profile Controller with access control', () => {
     // Mock successful permission check and profile data
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 200 });
     (mockAxios.get as jest.Mock).mockResolvedValue({
-      data: [{ id: 1, name: 'User Test' }],
+      data: [{ id: 1, name: "User Test" }],
     });
 
     await getAllProfiles(req, res);
 
     // Expect access control check
-    expect(mockAxios.post).toHaveBeenCalledWith('http://fake-auth/access/check', {
-      token: 'valid_token',
-      rightName: 'VIEW_PROFILES',
-    });
+    expect(mockAxios.post).toHaveBeenCalledWith(
+      "http://fake-auth/access/check",
+      {
+        token: "valid_token",
+        rightName: "VIEW_PROFILES",
+      },
+    );
 
     // Expect call to profile API
-    expect(mockAxios.get).toHaveBeenCalledWith('http://fake/profiles');
+    expect(mockAxios.get).toHaveBeenCalledWith("http://fake/profiles");
 
     // Expect response
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith([{ id: 1, name: 'User Test' }]);
+    expect(res.json).toHaveBeenCalledWith([{ id: 1, name: "User Test" }]);
   });
 
-  it('should fetch profile by ID with valid token and access', async () => {
+  it("should fetch profile by ID with valid token and access", async () => {
     const req = {
-      headers: { authorization: 'Bearer valid_token' },
-      params: { id: '99' },
+      headers: { authorization: "Bearer valid_token" },
+      params: { id: "99" },
     } as unknown as Request;
 
     const res = {
@@ -59,18 +65,21 @@ describe('Profile Controller with access control', () => {
     // Mock permission + single profile response
     (mockAxios.post as jest.Mock).mockResolvedValue({ status: 200 });
     (mockAxios.get as jest.Mock).mockResolvedValue({
-      data: { id: 99, name: 'User 99' },
+      data: { id: 99, name: "User 99" },
     });
 
     await getProfileById(req, res);
 
-    expect(mockAxios.post).toHaveBeenCalledWith('http://fake-auth/access/check', {
-      token: 'valid_token',
-      rightName: 'VIEW_PROFILES',
-    });
+    expect(mockAxios.post).toHaveBeenCalledWith(
+      "http://fake-auth/access/check",
+      {
+        token: "valid_token",
+        rightName: "VIEW_PROFILES",
+      },
+    );
 
-    expect(mockAxios.get).toHaveBeenCalledWith('http://fake/profiles/99');
+    expect(mockAxios.get).toHaveBeenCalledWith("http://fake/profiles/99");
     expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({ id: 99, name: 'User 99' });
+    expect(res.json).toHaveBeenCalledWith({ id: 99, name: "User 99" });
   });
 });

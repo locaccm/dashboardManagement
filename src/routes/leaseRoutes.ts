@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import * as leaseController from '../controllers/leaseController';
+import { Router } from "express";
+import * as leaseController from "../controllers/leaseController";
 
 const router = Router();
 
@@ -50,7 +50,7 @@ const router = Router();
  *       400:
  *         description: Invalid input
  */
-router.post('/', leaseController.createLease);
+router.post("/", leaseController.createLease);
 
 /**
  * @swagger
@@ -93,7 +93,7 @@ router.post('/', leaseController.createLease);
  *       404:
  *         description: Not found
  */
-router.put('/:id', leaseController.updateLease);
+router.put("/:id", leaseController.updateLease);
 
 /**
  * @swagger
@@ -113,6 +113,6 @@ router.put('/:id', leaseController.updateLease);
  *       404:
  *         description: Not found
  */
-router.delete('/:id', leaseController.deleteLease);
+router.delete("/:id", leaseController.deleteLease);
 
 export default router;

@@ -12,8 +12,8 @@ import messageRoutes from "./routes/messageRoutes";
 
 const app = express();
 
-// CORS middleware 
-app.use(cors());//NOSONAR
+// CORS middleware
+app.use(cors()); //NOSONAR
 
 // Middleware JSON
 app.use(express.json());

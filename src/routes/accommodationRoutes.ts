@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import * as accommodationController from '../controllers/accommodationController';
+import { Router } from "express";
+import * as accommodationController from "../controllers/accommodationController";
 
 const router = Router();
 
@@ -29,7 +29,7 @@ const router = Router();
  *       400:
  *         description: userId is required
  */
-router.get('/', accommodationController.getAccommodations);
+router.get("/", accommodationController.getAccommodations);
 
 /**
  * @swagger
@@ -66,7 +66,7 @@ router.get('/', accommodationController.getAccommodations);
  *       400:
  *         description: Missing fields
  */
-router.post('/', accommodationController.createAccommodation);
+router.post("/", accommodationController.createAccommodation);
 
 /**
  * @swagger
@@ -100,7 +100,7 @@ router.post('/', accommodationController.createAccommodation);
  *       404:
  *         description: Not found
  */
-router.put('/:id', accommodationController.updateAccommodation);
+router.put("/:id", accommodationController.updateAccommodation);
 
 /**
  * @swagger
@@ -120,6 +120,6 @@ router.put('/:id', accommodationController.updateAccommodation);
  *       404:
  *         description: Not found
  */
-router.delete('/:id', accommodationController.deleteAccommodation);
+router.delete("/:id", accommodationController.deleteAccommodation);
 
 export default router;

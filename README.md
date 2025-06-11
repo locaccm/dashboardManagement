@@ -30,8 +30,10 @@ This project is an API Gateway designed for a multi-service real estate or tenan
 - dotenv for environment variable management
 
 ## Run Tests
+
 npm test
 
 ## Swagger Documentation
+
 - Swagger UI will be available at:
-http://localhost:4000/api-docs
+  http://localhost:4000/api-docs
