@@ -1,8 +1,10 @@
 {
-  "scripts": {
-    "dev": "ts-node src/index.ts",
-    "test": "jest --coverage --coverageReporters=lcov"
-  },
+"scripts": {
+  "dev": "ts-node src/server.ts",
+  "test": "jest --coverage --coverageReporters=lcov",
+  "build": "tsc",
+  "start": "node dist/server.js"
+},
   "devDependencies": {
     "@eslint/js": "^9.22.0",
     "@types/axios": "^0.14.4",

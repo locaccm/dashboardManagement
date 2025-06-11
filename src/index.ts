@@ -1,44 +1,31 @@
 import dotenv from "dotenv";
-dotenv.config(); // Load environment variables from .env file
+dotenv.config();
 
-console.log("PROFILE_API =", process.env.PROFILE_API); // Debug log to check environment setup
-
-import express from 'express';
-import profileRoutes from './routes/profileRoutes';
-import { setupSwagger } from './swagger';
-import leaseRoutes from './routes/leaseRoutes';
-import accommodationRoutes from './routes/accommodationRoutes';
+import express from "express";
+import cors from "cors";
+import profileRoutes from "./routes/profileRoutes";
+import { setupSwagger } from "./swagger";
+import leaseRoutes from "./routes/leaseRoutes";
+import accommodationRoutes from "./routes/accommodationRoutes";
 import eventRoutes from "./routes/eventRoutes";
 import messageRoutes from "./routes/messageRoutes";
-import cors from 'cors';
 
 const app = express();
-app.use(express.json()); // Parse incoming JSON requests
+
+// CORS middleware 
+app.use(cors());//NOSONAR
+
+// Middleware JSON
+app.use(express.json());
 
 // Register all API routes
 app.use("/events", eventRoutes);
 app.use("/messages", messageRoutes);
-app.use('/profiles', profileRoutes);
-app.use('/leases', leaseRoutes);
-app.use('/accommodations', accommodationRoutes);
+app.use("/profiles", profileRoutes);
+app.use("/leases", leaseRoutes);
+app.use("/accommodations", accommodationRoutes);
 
 // Initialize Swagger docs
 setupSwagger(app);
 
-
-// autorise tout en dev (pour la prod, précise les origins !)
-app.use(cors({
-  origin: 'http://localhost:5173', // autorise ton front
-  credentials: true, // autorise les cookies si tu en utilises
-}));
-
-const PORT = process.env.PORT || 4000;
-
-// Start the server only if not in test mode
-if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-}
-
-export default app; // Export the app for testing
+export default app;
