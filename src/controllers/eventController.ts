@@ -1,45 +1,116 @@
-import { Request, Response } from 'express';
-import prisma from '../lib/prisma';
+import axios from "axios";
+import { Request, Response } from "express";
 
-// Get events for owner (related accommodations)
-export const getOwnerEvents = async (req: Request, res: Response) => {
-  const events = await prisma.event.findMany({
-    where: {
-      user: { USEN_ID: parseInt(req.params.userId), USEC_TYPE: 'OWNER' }
+const EVENT_API = process.env.EVENT_API;
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
+
+const checkAccess = async (token: string, rightName: string): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${AUTH_SERVICE_URL}/access/check`, { token, rightName });
+    return response.status === 200;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const getEvents = async (req: Request, res: Response): Promise<void> => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    res.status(401).json({ error: 'No token provided' });
+  } else {
+    const access = await checkAccess(token, 'VIEW_EVENTS');
+    if (!access) {
+      res.sendStatus(403);
+    } else {
+      try {
+        const response = await axios.get(`${EVENT_API}`);
+        res.status(200).json(response.data);
+      } catch (error) {
+        res.status(500).json({ error: "Failed to fetch events" });
+      }
     }
-  });
-  res.json(events);
+  }
 };
 
-// Get events for tenant (related lease/accommodation)
-export const getTenantEvents = async (req: Request, res: Response) => {
-  const lease = await prisma.lease.findFirst({
-    where: { USEN_ID: parseInt(req.params.userId), LEAB_ACTIVE: true },
-  });
+export const getEventById = async (req: Request, res: Response): Promise<void> => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const { id } = req.params;
 
-  if (!lease) return res.json([]);
-
-  const events = await prisma.event.findMany({
-    where: { ACCN_ID: lease.ACCN_ID }
-  });
-  res.json(events);
+  if (!token) {
+    res.status(401).json({ error: 'No token provided' });
+  } else {
+    const access = await checkAccess(token, 'VIEW_EVENTS');
+    if (!access) {
+      res.sendStatus(403);
+    } else {
+      try {
+        const response = await axios.get(`${EVENT_API}/${id}`);
+        res.status(200).json(response.data);
+      } catch (error) {
+        res.status(500).json({ error: "Failed to fetch event" });
+      }
+    }
+  }
 };
 
-// CRUD operations
-export const createEvent = async (req: Request, res: Response) => {
-  const event = await prisma.event.create({ data: req.body });
-  res.json(event);
+export const createEvent = async (req: Request, res: Response): Promise<void> => {
+  const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    res.status(401).json({ error: 'No token provided' });
+  } else {
+    const access = await checkAccess(token, 'CREATE_EVENT');
+    if (!access) {
+      res.sendStatus(403);
+    } else {
+      try {
+        const response = await axios.post(`${EVENT_API}`, req.body);
+        res.status(201).json(response.data);
+      } catch (error) {
+        res.status(500).json({ error: "Failed to create event" });
+      }
+    }
+  }
 };
 
-export const updateEvent = async (req: Request, res: Response) => {
-  const event = await prisma.event.update({
-    where: { EVEN_ID: parseInt(req.params.id) },
-    data: req.body,
-  });
-  res.json(event);
+export const updateEvent = async (req: Request, res: Response): Promise<void> => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const { id } = req.params;
+
+  if (!token) {
+    res.status(401).json({ error: 'No token provided' });
+  } else {
+    const access = await checkAccess(token, 'UPDATE_EVENT');
+    if (!access) {
+      res.sendStatus(403);
+    } else {
+      try {
+        const response = await axios.put(`${EVENT_API}/${id}`, req.body);
+        res.status(200).json(response.data);
+      } catch (error) {
+        res.status(500).json({ error: "Failed to update event" });
+      }
+    }
+  }
 };
 
-export const deleteEvent = async (req: Request, res: Response) => {
-  await prisma.event.delete({ where: { EVEN_ID: parseInt(req.params.id) } });
-  res.json({ message: 'Événement supprimé.' });
+export const deleteEvent = async (req: Request, res: Response): Promise<void> => {
+  const token = req.headers.authorization?.split(' ')[1];
+  const { id } = req.params;
+
+  if (!token) {
+    res.status(401).json({ error: 'No token provided' });
+  } else {
+    const access = await checkAccess(token, 'DELETE_EVENT');
+    if (!access) {
+      res.sendStatus(403);
+    } else {
+      try {
+        const response = await axios.delete(`${EVENT_API}/${id}`);
+        res.status(200).json(response.data);
+      } catch (error) {
+        res.status(500).json({ error: "Failed to delete event" });
+      }
+    }
+  }
 };
