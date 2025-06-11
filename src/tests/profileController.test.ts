@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 process.env.PROFILE_API = "http://fake";
 process.env.AUTH_SERVICE_URL = "http://fake-auth";
 

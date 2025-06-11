@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/check-tag-names */
 import { Router } from "express";
 import { getMessages, sendMessage } from "../controllers/messageController";
 

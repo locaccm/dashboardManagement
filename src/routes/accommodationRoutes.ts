@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/check-tag-names */
 import { Router } from "express";
 import * as accommodationController from "../controllers/accommodationController";
 

@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 import axios from "axios";
 import mockAxios from "axios";
 

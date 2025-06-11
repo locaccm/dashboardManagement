@@ -1,3 +1,4 @@
+/* eslint-env jest */
 import request from "supertest";
 import app from "../index";
 import mockAxios from "../tests/__mocks__/axios";

@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 process.env.EVENT_API = "http://fake/events";
 process.env.AUTH_SERVICE_URL = "http://fake-auth";
 

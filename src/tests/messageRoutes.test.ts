@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 // Set environment variables for message and auth services
 process.env.MESSAGE_API = "http://fake/messages";
 process.env.AUTH_SERVICE_URL = "http://fake-auth";

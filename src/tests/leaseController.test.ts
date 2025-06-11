@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 // leaseController.test.ts
 
 process.env.LEASE_API = "http://fake";

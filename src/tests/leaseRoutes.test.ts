@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 // leaseRoutes.test.ts
 
 process.env.LEASE_API = "http://fake";
