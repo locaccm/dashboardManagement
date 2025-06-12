@@ -1,10 +1,11 @@
 import axios from "axios";
 import { Request, Response } from "express";
 
-import { ACCOMMODATION_API, AUTH_SERVICE_URL } from "../index";
+const ACCOMMODATION_API = process.env.ACCOMMODATION_API;
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL;
 
 /**
- * Checks if the users has the required permission by calling the Auth microservice.
+ * Checks if the user has the required permission by calling the Auth microservice.
  */
 const checkAccess = async (
   token: string,
