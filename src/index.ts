@@ -9,23 +9,34 @@ import leaseRoutes from "./routes/leaseRoutes";
 import accommodationRoutes from "./routes/accommodationRoutes";
 import eventRoutes from "./routes/eventRoutes";
 import messageRoutes from "./routes/messageRoutes";
+import { validateApiUrl } from "./utils/envValidator";
+
+// Dynamically build the allow-list
+const allowedDomains = [
+  "localhost",
+  "fake-auth",
+  "fake-accommodation",
+  "fake-event",
+];
+
+// Only validate URLs outside of test env
+if (process.env.NODE_ENV !== "test") {
+  validateApiUrl(process.env.EVENT_API, allowedDomains);
+  validateApiUrl(process.env.ACCOMMODATION_API, allowedDomains);
+  validateApiUrl(process.env.AUTH_SERVICE_URL, allowedDomains);
+}
 
 const app = express();
 
-// CORS middleware
 app.use(cors()); //NOSONAR
-
-// Middleware JSON
 app.use(express.json());
 
-// Register all API routes
 app.use("/events", eventRoutes);
 app.use("/messages", messageRoutes);
 app.use("/profiles", profileRoutes);
 app.use("/leases", leaseRoutes);
 app.use("/accommodations", accommodationRoutes);
 
-// Initialize Swagger docs
 setupSwagger(app);
 
 export default app;
