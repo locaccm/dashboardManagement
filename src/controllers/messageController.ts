@@ -18,6 +18,8 @@ const checkAccess = async (
     });
     return response.status === 200;
   } catch (error) {
+    // Log the error for observability & debugging
+    console.error("checkAccess error:", error);
     return false;
   }
 };
@@ -45,6 +47,8 @@ export const getMessages = async (
         });
         res.status(200).json(response.data);
       } catch (error) {
+        // Log the error for observability & debugging
+        console.error("getMessages error:", error);
         res.status(500).json({ error: "Failed to fetch messages" });
       }
     }
@@ -76,6 +80,8 @@ export const sendMessage = async (
         });
         res.status(200).json(response.data);
       } catch (error) {
+        // Log the error for observability & debugging
+        console.error("sendMessage error:", error);
         res.status(500).json({ error: "Failed to send message" });
       }
     }

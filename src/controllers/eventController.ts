@@ -18,6 +18,8 @@ const checkAccess = async (
     });
     return response.status === 200;
   } catch (error) {
+    // Log the error for security and debugging
+    console.error("Auth microservice checkAccess error:", error);
     return false;
   }
 };
@@ -39,6 +41,8 @@ export const getEvents = async (req: Request, res: Response): Promise<void> => {
         const response = await axios.get(`${EVENT_API}`);
         res.status(200).json(response.data);
       } catch (error) {
+        // Log the error for security and debugging
+        console.error("getEvents error:", error);
         res.status(500).json({ error: "Failed to fetch events" });
       }
     }
@@ -55,7 +59,6 @@ export const getEventById = async (
 ): Promise<void> => {
   const token = req.headers.authorization?.split(" ")[1];
   const { id } = req.params;
-
   if (!token) {
     res.status(401).json({ error: "No token provided" });
   } else {
@@ -67,6 +70,8 @@ export const getEventById = async (
         const response = await axios.get(`${EVENT_API}/${id}`);
         res.status(200).json(response.data);
       } catch (error) {
+        // Log the error for security and debugging
+        console.error("getEventById error:", error);
         res.status(500).json({ error: "Failed to fetch event" });
       }
     }
@@ -82,7 +87,6 @@ export const createEvent = async (
   res: Response,
 ): Promise<void> => {
   const token = req.headers.authorization?.split(" ")[1];
-
   if (!token) {
     res.status(401).json({ error: "No token provided" });
   } else {
@@ -94,6 +98,8 @@ export const createEvent = async (
         const response = await axios.post(`${EVENT_API}`, req.body);
         res.status(201).json(response.data);
       } catch (error) {
+        // Log the error for security and debugging
+        console.error("createEvent error:", error);
         res.status(500).json({ error: "Failed to create event" });
       }
     }
@@ -110,7 +116,6 @@ export const updateEvent = async (
 ): Promise<void> => {
   const token = req.headers.authorization?.split(" ")[1];
   const { id } = req.params;
-
   if (!token) {
     res.status(401).json({ error: "No token provided" });
   } else {
@@ -122,6 +127,8 @@ export const updateEvent = async (
         const response = await axios.put(`${EVENT_API}/${id}`, req.body);
         res.status(200).json(response.data);
       } catch (error) {
+        // Log the error for security and debugging
+        console.error("updateEvent error:", error);
         res.status(500).json({ error: "Failed to update event" });
       }
     }
@@ -138,7 +145,6 @@ export const deleteEvent = async (
 ): Promise<void> => {
   const token = req.headers.authorization?.split(" ")[1];
   const { id } = req.params;
-
   if (!token) {
     res.status(401).json({ error: "No token provided" });
   } else {
@@ -150,6 +156,8 @@ export const deleteEvent = async (
         const response = await axios.delete(`${EVENT_API}/${id}`);
         res.status(200).json(response.data);
       } catch (error) {
+        // Log the error for security and debugging
+        console.error("deleteEvent error:", error);
         res.status(500).json({ error: "Failed to delete event" });
       }
     }
