@@ -145,7 +145,7 @@ export const deleteAccommodation = async (
     return;
   }
 
-  // Validate the ID before using it in the URL (for SonarQube Security)
+  // Validate ID before any usage (for SonarQube Security)
   if (!/^\d+$/.test(id)) {
     res.status(400).json({ error: "Invalid ID format" });
     return;
@@ -156,13 +156,14 @@ export const deleteAccommodation = async (
     res.sendStatus(403);
     return;
   }
+
   try {
+    // SonarQube: 'id' is validated (only digits), safe for URL usage
     const response = await axios.delete(`${ACCOMMODATION_API}/delete/${id}`, {
       headers: { "user-id": userId },
     });
     res.status(200).json(response.data);
   } catch (error) {
-    // Log the error for security and debugging
     console.error("deleteAccommodation error:", error);
     res.status(500).json({ error: "Failed to delete accommodation" });
   }
