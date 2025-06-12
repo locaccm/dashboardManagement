@@ -137,7 +137,6 @@ export const deleteAccommodation = async (
   res: Response,
 ): Promise<void> => {
   const token = req.headers.authorization?.split(" ")[1];
-  const { id } = req.params;
   const userId = req.headers["user-id"];
 
   if (!token) {
@@ -145,7 +144,10 @@ export const deleteAccommodation = async (
     return;
   }
 
-  if (!/^\d+$/.test(id)) {
+  const rawId = req.params.id;
+  const id = Number(rawId);
+
+  if (!Number.isInteger(id) || id <= 0) {
     res.status(400).json({ error: "Invalid ID format" });
     return;
   }
@@ -159,7 +161,7 @@ export const deleteAccommodation = async (
   try {
     const response = await axios.delete(`${ACCOMMODATION_API}/delete`, {
       headers: { "user-id": userId },
-      data: { id }, // <-- Utiliser le body de la requête DELETE
+      data: { id },
     });
     res.status(200).json(response.data);
   } catch (error) {
