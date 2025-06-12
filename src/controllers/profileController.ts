@@ -18,6 +18,7 @@ const checkAccess = async (
     });
     return response.status === 200;
   } catch (error) {
+    console.error("Auth microservice checkAccess error:", error);
     return false;
   }
 };
@@ -35,18 +36,16 @@ export const getAllProfiles = async (
     res.status(401).json({ error: "No token provided" });
     return;
   }
-
   const access = await checkAccess(token, "VIEW_PROFILES");
   if (!access) {
     res.sendStatus(403);
     return;
   }
-
   try {
     const response = await axios.get(`${PROFILE_API}/profiles`);
     res.status(200).json(response.data);
   } catch (error) {
-    console.error("AXIOS ERROR:", error);
+    console.error("getAllProfiles error:", error);
     res.status(500).json({ error: "Failed to fetch profiles" });
   }
 };
@@ -66,17 +65,16 @@ export const getProfileById = async (
     res.status(401).json({ error: "No token provided" });
     return;
   }
-
   const access = await checkAccess(token, "VIEW_PROFILES");
   if (!access) {
     res.sendStatus(403);
     return;
   }
-
   try {
     const response = await axios.get(`${PROFILE_API}/profiles/${id}`);
     res.status(200).json(response.data);
   } catch (error) {
+    console.error("getProfileById error:", error); // <-- Ajout du log de l’erreur
     res.status(500).json({ error: "Failed to fetch profile" });
   }
 };
