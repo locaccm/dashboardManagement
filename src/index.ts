@@ -11,7 +11,7 @@ import eventRoutes from "./routes/eventRoutes";
 import messageRoutes from "./routes/messageRoutes";
 import { validateApiUrl } from "./utils/envValidator";
 
-// Dynamically build the allow-lists
+// Dynamically build the allow-list
 const allowedDomains = [
   "localhost",
   "fake-auth",
@@ -19,12 +19,15 @@ const allowedDomains = [
   "fake-event",
 ];
 
-// Only validate URLs outside of test env
-if (process.env.NODE_ENV !== "test") {
-  validateApiUrl(process.env.EVENT_API, allowedDomains);
-  validateApiUrl(process.env.ACCOMMODATION_API, allowedDomains);
-  validateApiUrl(process.env.AUTH_SERVICE_URL, allowedDomains);
-}
+// Validate API URLs and export the validated values
+export const ACCOMMODATION_API = validateApiUrl(
+  process.env.ACCOMMODATION_API,
+  allowedDomains,
+);
+export const AUTH_SERVICE_URL = validateApiUrl(
+  process.env.AUTH_SERVICE_URL,
+  allowedDomains,
+);
 
 const app = express();
 
