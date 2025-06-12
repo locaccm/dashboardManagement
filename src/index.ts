@@ -11,7 +11,7 @@ import eventRoutes from "./routes/eventRoutes";
 import messageRoutes from "./routes/messageRoutes";
 import { validateApiUrl } from "./utils/envValidator";
 
-// Dynamically build the allow-list
+// Dynamically build the allow-lists
 const allowedDomains = [
   "localhost",
   "fake-auth",
