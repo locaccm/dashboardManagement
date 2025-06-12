@@ -19,15 +19,15 @@ const allowedDomains = [
   "fake-event",
 ];
 
-// Validate API URLs and export the validated values
-export const ACCOMMODATION_API = validateApiUrl(
-  process.env.ACCOMMODATION_API,
-  allowedDomains,
-);
-export const AUTH_SERVICE_URL = validateApiUrl(
-  process.env.AUTH_SERVICE_URL,
-  allowedDomains,
-);
+export const ACCOMMODATION_API =
+  process.env.NODE_ENV === "test"
+    ? process.env.ACCOMMODATION_API
+    : validateApiUrl(process.env.ACCOMMODATION_API, allowedDomains);
+
+export const AUTH_SERVICE_URL =
+  process.env.NODE_ENV === "test"
+    ? process.env.AUTH_SERVICE_URL
+    : validateApiUrl(process.env.AUTH_SERVICE_URL, allowedDomains);
 
 const app = express();
 
