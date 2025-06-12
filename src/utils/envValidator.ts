@@ -7,24 +7,19 @@
 export function validateApiUrl(
   envUrl: string | undefined,
   allowedDomains: string[],
-): void {
-  if (!envUrl) {
-    throw new Error("Missing environment variable for API URL");
-  }
+): string {
+  if (!envUrl) throw new Error("Missing API URL");
   let url: URL;
   try {
     url = new URL(envUrl);
   } catch (e) {
-    throw new Error(`Malformed environment URL: ${envUrl}`);
+    throw new Error(`Malformed API URL: ${envUrl}`);
   }
-
-  // Check protocol is http or https
   if (!["http:", "https:"].includes(url.protocol)) {
     throw new Error(`Invalid protocol: ${url.protocol}`);
   }
-
-  // Check hostname is in allow-list
   if (!allowedDomains.includes(url.hostname)) {
     throw new Error(`Domain not allowed: ${url.hostname}`);
   }
+  return envUrl;
 }
