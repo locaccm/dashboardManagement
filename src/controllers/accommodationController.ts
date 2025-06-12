@@ -17,7 +17,10 @@ const checkAccess = async (
       rightName,
     });
     return response.status === 200;
-  } catch (_error) {
+  } catch (error) {
+    // Log the error for security and debugging
+    console.error("Auth microservice checkAccess error:", error);
+    // We return false on error to avoid exposing permission check failures
     return false;
   }
 };
@@ -45,6 +48,8 @@ export const getAccommodations = async (
         });
         res.status(200).json(response.data);
       } catch (error) {
+        // Log the error for security and debugging
+        console.error("getAccommodations error:", error);
         res.status(500).json({ error: "Failed to fetch accommodations" });
       }
     }
@@ -74,6 +79,8 @@ export const createAccommodation = async (
         );
         res.status(201).json(response.data);
       } catch (error) {
+        // Log the error for security and debugging
+        console.error("createAccommodation error:", error);
         res.status(500).json({ error: "Failed to create accommodation" });
       }
     }
@@ -94,23 +101,32 @@ export const updateAccommodation = async (
 
   if (!token) {
     res.status(401).json({ error: "No token provided" });
+    return;
+  }
+
+  // Validate the ID before using it in the URL (for SonarQube Security)
+  if (!/^\d+$/.test(id)) {
+    res.status(400).json({ error: "Invalid ID format" });
+    return;
+  }
+
+  const access = await checkAccess(token, "UPDATE_ACCOMMODATION");
+  if (!access) {
+    res.sendStatus(403);
   } else {
-    const access = await checkAccess(token, "UPDATE_ACCOMMODATION");
-    if (!access) {
-      res.sendStatus(403);
-    } else {
-      try {
-        const response = await axios.put(
-          `${ACCOMMODATION_API}/update/${id}`,
-          req.body,
-          {
-            headers: { "user-id": userId },
-          },
-        );
-        res.status(200).json(response.data);
-      } catch (error) {
-        res.status(500).json({ error: "Failed to update accommodation" });
-      }
+    try {
+      const response = await axios.put(
+        `${ACCOMMODATION_API}/update/${id}`,
+        req.body,
+        {
+          headers: { "user-id": userId },
+        },
+      );
+      res.status(200).json(response.data);
+    } catch (error) {
+      // Log the error for security and debugging
+      console.error("updateAccommodation error:", error);
+      res.status(500).json({ error: "Failed to update accommodation" });
     }
   }
 };
@@ -129,22 +145,28 @@ export const deleteAccommodation = async (
 
   if (!token) {
     res.status(401).json({ error: "No token provided" });
+    return;
+  }
+
+  // Validate the ID before using it in the URL (for SonarQube Security)
+  if (!/^\d+$/.test(id)) {
+    res.status(400).json({ error: "Invalid ID format" });
+    return;
+  }
+
+  const access = await checkAccess(token, "DELETE_ACCOMMODATION");
+  if (!access) {
+    res.sendStatus(403);
   } else {
-    const access = await checkAccess(token, "DELETE_ACCOMMODATION");
-    if (!access) {
-      res.sendStatus(403);
-    } else {
-      try {
-        const response = await axios.delete(
-          `${ACCOMMODATION_API}/delete/${id}`,
-          {
-            headers: { "user-id": userId },
-          },
-        );
-        res.status(200).json(response.data);
-      } catch (error) {
-        res.status(500).json({ error: "Failed to delete accommodation" });
-      }
+    try {
+      const response = await axios.delete(`${ACCOMMODATION_API}/delete/${id}`, {
+        headers: { "user-id": userId },
+      });
+      res.status(200).json(response.data);
+    } catch (error) {
+      // Log the error for security and debugging
+      console.error("deleteAccommodation error:", error);
+      res.status(500).json({ error: "Failed to delete accommodation" });
     }
   }
 };
