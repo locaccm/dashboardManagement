@@ -159,7 +159,7 @@ export const deleteAccommodation = async (
   try {
     const response = await axios.delete(`${ACCOMMODATION_API}/delete`, {
       headers: { "user-id": userId },
-      params: { id },
+      data: { id }, // <-- Utiliser le body de la requête DELETE
     });
     res.status(200).json(response.data);
   } catch (error) {
