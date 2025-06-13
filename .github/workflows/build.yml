@@ -81,7 +81,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL_PRE_PROD }} \
             --build-arg AUTH_SERVICE_URL=${{ secrets.AUTH_SERVICE_URL }} \
             -t dashboardmanagement-service:latest .
 
