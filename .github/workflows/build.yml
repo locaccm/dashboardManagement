@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - develop
-      - epic/** 
+      - epic/**
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -11,6 +11,15 @@ jobs:
   sonarqube:
     name: SonarQube
     runs-on: ubuntu-latest
+    env:
+      PROFILE_API: ${{ secrets.PROFILE_API }}
+      ACCOMMODATION_API: ${{ secrets.ACCOMMODATION_API }}
+      LEASE_API: ${{ secrets.LEASE_API }}
+      EVENT_API: ${{ secrets.EVENT_API }}
+      MESSAGE_API: ${{ secrets.MESSAGE_API }}
+      AUTH_SERVICE_URL: ${{ secrets.AUTH_SERVICE_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -19,10 +28,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22.13.1  
+          node-version: 22.13.1
 
       - name: Install dependencies
-        run: npm install  
+        run: npm install
 
       - name: Set Database URL
         run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
