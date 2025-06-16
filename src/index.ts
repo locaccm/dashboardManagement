@@ -31,7 +31,14 @@ export const AUTH_SERVICE_URL =
 
 const app = express();
 
-app.use(cors()); //NOSONAR
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN ?? "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Content-Type,Authorization,user-id",
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 app.use("/events", eventRoutes);
