@@ -8,7 +8,7 @@ const router = Router();
  * @swagger
  * tags:
  *   name: Messages
- *   description: Gestion des messages entre utilisateurs
+ *   description: Managing messages between users
  */
 
 router.get("/", getMessages);

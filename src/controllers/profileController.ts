@@ -74,7 +74,7 @@ export const getProfileById = async (
     const response = await axios.get(`${PROFILE_API}/profiles/${id}`);
     res.status(200).json(response.data);
   } catch (error) {
-    console.error("getProfileById error:", error); // <-- Ajout du log de l’erreur
+    console.error("getProfileById error:", error);
     res.status(500).json({ error: "Failed to fetch profile" });
   }
 };
